@@ -1,0 +1,109 @@
+package de.pawlidi.restgithub.rest.converter;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okio.Buffer;
+import retrofit2.Converter;
+import retrofit2.Retrofit;
+
+public final class GsonConverter extends Converter.Factory {
+
+	private Gson gson;
+
+	public GsonConverter() {
+		super();
+		this.gson = new Gson();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * retrofit2.Converter.Factory#responseBodyConverter(java.lang.reflect.Type,
+	 * java.lang.annotation.Annotation[], retrofit2.Retrofit)
+	 */
+	@Override
+	public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+		return new ResponseBodyConverter<>(gson.getAdapter(TypeToken.get(type)));
+	}
+
+	private class ResponseBodyConverter<T> implements Converter<ResponseBody, T> {
+		private final TypeAdapter<T> adapter;
+
+		private ResponseBodyConverter(TypeAdapter<T> adapter) {
+			super();
+			this.adapter = adapter;
+		}
+
+		@Override
+		public T convert(ResponseBody value) throws IOException {
+			JsonReader jsonReader = gson.newJsonReader(value.charStream());
+			try {
+				return adapter.read(jsonReader);
+			} finally {
+				value.close();
+			}
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * retrofit2.Converter.Factory#requestBodyConverter(java.lang.reflect.Type,
+	 * java.lang.annotation.Annotation[], java.lang.annotation.Annotation[],
+	 * retrofit2.Retrofit)
+	 */
+	@Override
+	public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations,
+			Annotation[] methodAnnotations, Retrofit retrofit) {
+		return new RequestBodyConverter<>(gson.getAdapter(TypeToken.get(type)));
+	}
+
+	private class RequestBodyConverter<T> implements Converter<T, RequestBody> {
+
+		private final TypeAdapter<T> adapter;
+
+		public RequestBodyConverter(TypeAdapter<T> adapter) {
+			this.adapter = adapter;
+		}
+
+		@Override
+		public RequestBody convert(T value) throws IOException {
+			Buffer buffer = new Buffer();
+			Writer writer = new OutputStreamWriter(buffer.outputStream(), Charset.forName("UTF-8"));
+			JsonWriter jsonWriter = gson.newJsonWriter(writer);
+			adapter.write(jsonWriter, value);
+			jsonWriter.close();
+			return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), buffer.readByteString());
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see retrofit2.Converter.Factory#stringConverter(java.lang.reflect.Type,
+	 * java.lang.annotation.Annotation[], retrofit2.Retrofit)
+	 */
+	@Override
+	public Converter<?, String> stringConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+		return super.stringConverter(type, annotations, retrofit);
+	}
+
+}

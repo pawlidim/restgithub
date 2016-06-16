@@ -1,23 +1,28 @@
 package de.pawlidi.restgithub;
 
-import java.util.List;
+import java.io.Serializable;
 
-import de.pawlidi.restgithub.dto.Repository;
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
+import de.pawlidi.restgithub.rest.converter.GsonConverter;
+import retrofit2.Retrofit;
 
-public interface GitHubService {
+public class GitHubService implements Serializable {
 
-	@GET("users/{user}/repos")
-	Call<List<Repository>> getUserRepositories(@Path("user") String user);
+	private Retrofit retrofit;
 
-	@GET("orgs/{org}/repos")
-	Call<List<Repository>> getOrganisationRepositories(@Path("org") String organisation);
+	public GitHubService() {
+		super();
+		retrofit = new Retrofit.Builder().baseUrl("https://api.github.com").addConverterFactory(new GsonConverter())
+				.build();
+	}
 
-	@GET("repositories")
-	Call<List<Repository>> getRepositories();
+	public void release() {
+		// TODO Auto-generated method stub
 
-	@GET("repos/{owner}/{repo}")
-	Call<Repository> getRepository(@Path("owner") String owner, @Path("repo") String repository);
+	}
+
+	public void getRepositories() {
+		// TODO Auto-generated method stub
+
+	}
+
 }
