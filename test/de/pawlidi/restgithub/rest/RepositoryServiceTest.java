@@ -3,16 +3,19 @@
  */
 package de.pawlidi.restgithub.rest;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.pawlidi.restgithub.rest.converter.GsonConverter;
-import retrofit2.Retrofit;
+import de.pawlidi.restgithub.TestUtils;
+import de.pawlidi.restgithub.dto.Repository;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * @author PAWLIDIM
@@ -20,15 +23,14 @@ import retrofit2.Retrofit;
  */
 public class RepositoryServiceTest {
 
-	private Retrofit retrofit;
+	private RepositoryService service;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		retrofit = new Retrofit.Builder().baseUrl("https://api.github.com").addConverterFactory(new GsonConverter())
-				.build();
+		service = TestUtils.createRetrofit().create(RepositoryService.class);
 	}
 
 	/**
@@ -38,55 +40,73 @@ public class RepositoryServiceTest {
 	public void tearDown() throws Exception {
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.pawlidi.restgithub.rest.RepositoryService#getUserRepositories(java.lang.String)}
-	 * .
-	 */
 	@Test
-	public void testGetUserRepositories() {
-		assertTrue(true);
+	public void testGetOrganisationRepositories() throws Exception {
+		Call<List<Repository>> call = service.getOrganisationRepositories("swagger-api", null);
+		assertNotNull(call);
+		Response<List<Repository>> response = call.execute();
+		assertTrue(response.isSuccessful());
+		assertNotNull(response.body());
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.pawlidi.restgithub.rest.RepositoryService#getOrganisationRepositories(java.lang.String)}
-	 * .
-	 */
 	@Test
-	public void testGetOrganisationRepositories() {
-		assertTrue(true);
+	public void testGetAllRepositories() throws Exception {
+		Call<List<Repository>> call = service.getRepositories(null);
+		assertNotNull(call);
+		Response<List<Repository>> response = call.execute();
+		assertTrue(response.isSuccessful());
+		assertNotNull(response.body());
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.pawlidi.restgithub.rest.RepositoryService#getRepositories()}.
-	 * 
-	 * @throws IOException
-	 */
 	@Test
-	public void testGetRepositories() throws IOException {
-		// RepositoryService service = retrofit.create(RepositoryService.class);
-		// assertTrue(service.getUserRepositories("pawlidim").execute().isSuccessful());
-		// List<Repository> repos =
-		// service.getUserRepositories("pawlidim").execute().body();
-		// assertTrue(!repos.isEmpty());
-		// for (Repository repository : repos) {
-		// System.out.println(
-		// repository.getId() + " -> " + repository.getName() + " : " +
-		// repository.getOwner().getLogin());
-		// }
-		assertTrue(true);
+	public void testGetRepository() throws Exception {
+		Call<Repository> call = service.getRepository("pawlidim", "restgithub");
+		assertNotNull(call);
+		Response<Repository> response = call.execute();
+		assertTrue(response.isSuccessful());
+		Repository repository = response.body();
+		assertNotNull(repository);
+		assertTrue(repository.getName().equals("restgithub"));
 	}
 
-	/**
-	 * Test method for
-	 * {@link de.pawlidi.restgithub.rest.RepositoryService#getRepository(java.lang.String, java.lang.String)}
-	 * .
-	 */
 	@Test
-	public void testGetRepository() {
-		assertTrue(true);
+	public void testGetUserRepositories() throws Exception {
+		Call<List<Repository>> call = service.getUserRepositories(TestUtils.USERNAME, null, null, null);
+		assertNotNull(call);
+		Response<List<Repository>> response = call.execute();
+		assertTrue(response.isSuccessful());
+		assertNotNull(response.body());
+	}
+
+	@Test
+	public void testGetRepositories() throws Exception {
+		Call<List<Repository>> call = service.getRepositories(TestUtils.LOGIN, null, null, null, null, null);
+		assertNotNull(call);
+		Response<List<Repository>> response = call.execute();
+		assertTrue(response.isSuccessful());
+		assertNotNull(response.body());
+	}
+
+	@Test
+	public void testCreateRepository() throws Exception {
+		Call<Repository> call = service.createRepository(TestUtils.LOGIN_TOKEN, "Hello-World",
+				"This is your first repository", "https://github.com", false, null, null, null, null, null, null, null);
+		assertNotNull(call);
+		Response<Repository> response = call.execute();
+		assertTrue(response.isSuccessful());
+		Repository repository = response.body();
+		assertNotNull(repository);
+		assertTrue(repository.getName().equals("Hello-World"));
+
+		call = service.updateRepository(TestUtils.LOGIN, "pawlidim", "Hello-World", "Hello-World-Test",
+				"This is your first repository", "https://github.com", false, true, true, true, null);
+		assertNotNull(call);
+		response = call.execute();
+		assertTrue(response.isSuccessful());
+		repository = response.body();
+		assertNotNull(repository);
+		assertTrue(repository.getName().equals("Hello-World-Test"));
+
 	}
 
 }

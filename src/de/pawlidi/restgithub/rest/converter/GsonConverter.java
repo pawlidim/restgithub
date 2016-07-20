@@ -20,7 +20,7 @@ import okio.Buffer;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
-public final class GsonConverter extends Converter.Factory {
+public final class GsonConverter extends Converter.Factory implements IConverter {
 
 	private Gson gson;
 
@@ -86,24 +86,12 @@ public final class GsonConverter extends Converter.Factory {
 		@Override
 		public RequestBody convert(T value) throws IOException {
 			Buffer buffer = new Buffer();
-			Writer writer = new OutputStreamWriter(buffer.outputStream(), Charset.forName("UTF-8"));
+			Writer writer = new OutputStreamWriter(buffer.outputStream(), Charset.forName(UTF_8));
 			JsonWriter jsonWriter = gson.newJsonWriter(writer);
 			adapter.write(jsonWriter, value);
 			jsonWriter.close();
-			return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), buffer.readByteString());
+			return RequestBody.create(MediaType.parse(GIT_HUB_MEDIA_TYPE), buffer.readByteString());
 		}
 
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see retrofit2.Converter.Factory#stringConverter(java.lang.reflect.Type,
-	 * java.lang.annotation.Annotation[], retrofit2.Retrofit)
-	 */
-	@Override
-	public Converter<?, String> stringConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
-		return super.stringConverter(type, annotations, retrofit);
-	}
-
 }

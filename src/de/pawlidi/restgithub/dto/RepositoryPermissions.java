@@ -1,8 +1,6 @@
 package de.pawlidi.restgithub.dto;
 
-import java.io.Serializable;
-
-public class RepositoryPermissions implements Serializable {
+public class RepositoryPermissions extends RestDTO {
 
 	private Boolean admin;
 	private Boolean push;

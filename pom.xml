@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>restgithub</groupId>
   <artifactId>restgithub</artifactId>
-  <version>0.4</version>
+  <version>0.5</version>
   <name>restgithub</name>
   <description>Java service for GitHub based on Retrofit (A type-safe HTTP client for Android and Java) and GitHub REST API</description>
   <dependencies>
@@ -17,14 +17,9 @@
       <version>4.12</version>
     </dependency>
     <dependency>
-      <groupId>com.squareup.okhttp3</groupId>
-      <artifactId>okhttp</artifactId>
-      <version>3.3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.squareup.retrofit2</groupId>
-      <artifactId>retrofit</artifactId>
-      <version>2.0.2</version>
+    	<groupId>com.squareup.retrofit2</groupId>
+    	<artifactId>retrofit</artifactId>
+    	<version>2.1.0</version>
     </dependency>
   </dependencies>
   <build>
@@ -42,4 +37,17 @@
     </plugins>
   </build>
   <url>http://www.pawlidi.de/projects/restgithub/</url>
+  <organization>
+  	<name>PAWLIDI.DE</name>
+  	<url>http://www.pawlidi.de</url>
+  </organization>
+  <scm>
+  	<url>https://github.com/pawlidim/</url>
+  	<connection>https://github.com/pawlidim/restgithub.git</connection>
+  	<developerConnection>pawlidim</developerConnection>
+  </scm>
+  <issueManagement>
+  	<url>https://github.com/pawlidim/restgithub/issues</url>
+  	<system>GitHub</system>
+  </issueManagement>
 </project>
