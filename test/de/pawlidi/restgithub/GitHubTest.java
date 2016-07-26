@@ -38,7 +38,7 @@ public class GitHubTest {
 	 */
 	@Test
 	public void testGetGitHubUserModule() throws Exception {
-		GitHubUser gitHubUser = gitHub.getGitHubUserModule();
+		GitHubUserService gitHubUser = gitHub.getUserService();
 		assertNotNull(gitHubUser);
 	}
 

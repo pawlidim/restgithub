@@ -3,12 +3,12 @@ package de.pawlidi.restgithub;
 import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class GitHubObject implements Serializable {
+public abstract class GitHubService implements Serializable {
 
 	protected String uuid;
 	protected GitHub gitHub;
 
-	protected GitHubObject(GitHub gitHub) {
+	protected GitHubService(GitHub gitHub) {
 		super();
 		this.uuid = UUID.randomUUID().toString();
 		this.gitHub = gitHub;

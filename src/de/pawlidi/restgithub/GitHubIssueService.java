@@ -1,5 +1,5 @@
 package de.pawlidi.restgithub;
 
-public class GitHubIssue {
+public class GitHubIssueService {
 
 }

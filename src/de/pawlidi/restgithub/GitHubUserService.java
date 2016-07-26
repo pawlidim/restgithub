@@ -17,11 +17,11 @@ import retrofit2.Response;
  * @author PAWLIDIM
  *
  */
-public final class GitHubUser extends GitHubObject {
+public final class GitHubUserService extends GitHubService {
 
 	private UserService service;
 
-	protected GitHubUser(GitHub gitHub) {
+	protected GitHubUserService(GitHub gitHub) {
 		super(gitHub);
 		this.service = gitHub.getRetrofit().create(UserService.class);
 	}

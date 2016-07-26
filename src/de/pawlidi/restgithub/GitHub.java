@@ -11,7 +11,7 @@ public final class GitHub implements Serializable {
 	public static final String GIT_HUB_API = "https://api.github.com";
 	private SecurityManager securityManager;
 	private Retrofit retrofit;
-	private GitHubUser gitHubUser;
+	private GitHubUserService gitHubUserService;
 
 	private GitHub() {
 		super();
@@ -36,10 +36,10 @@ public final class GitHub implements Serializable {
 		return retrofit;
 	}
 
-	public GitHubUser getGitHubUser() {
-		if (gitHubUser == null) {
-			gitHubUser = new GitHubUser(this);
+	public GitHubUserService getUserService() {
+		if (gitHubUserService == null) {
+			gitHubUserService = new GitHubUserService(this);
 		}
-		return gitHubUser;
+		return gitHubUserService;
 	}
 }
