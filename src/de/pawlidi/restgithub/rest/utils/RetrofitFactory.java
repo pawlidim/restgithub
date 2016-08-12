@@ -7,18 +7,35 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.Retrofit.Builder;
 
+/**
+ * Factory class for retrofit library.
+ * 
+ * @author PAWLIDIM
+ *
+ */
 public final class RetrofitFactory {
 
 	private RetrofitFactory() {
 		super();
 	}
 
+	/**
+	 * Creates retrofit service for given base url.
+	 * 
+	 * @param baseUrl
+	 * @return retrofit, null otherwise
+	 */
 	public static Retrofit createRetrofit(final String baseUrl) {
 		if (baseUrl != null && !baseUrl.trim().isEmpty()) {
 			Retrofit.Builder builder = new Retrofit.Builder();
 			builder.baseUrl(baseUrl);
+
+			// add converter
 			addConverter(builder);
+
+			// add client
 			addClient(builder);
+
 			return builder.build();
 		}
 		return null;
