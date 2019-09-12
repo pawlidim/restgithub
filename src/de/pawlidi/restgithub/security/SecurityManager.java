@@ -17,8 +17,8 @@ package de.pawlidi.restgithub.security;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.util.Base64;
 
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * 
@@ -79,8 +79,7 @@ public final class SecurityManager implements Serializable {
 	}
 
 	private String getStringForBasic() {
-		return String.format("Basic %s", DatatypeConverter
-				.printBase64Binary(String.format("%s:%s", username, password).getBytes(Charset.forName("UTF-8"))));
+		return String.format("Basic %s", Base64.getEncoder().encode(String.format("%s:%s", username, password).getBytes(Charset.forName("UTF-8"))));
 	}
 
 	public boolean isBasic() {

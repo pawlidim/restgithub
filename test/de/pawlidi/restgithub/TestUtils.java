@@ -1,9 +1,8 @@
 package de.pawlidi.restgithub;
 
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.UUID;
-
-import javax.xml.bind.DatatypeConverter;
 
 import de.pawlidi.restgithub.rest.converter.EnumConverter;
 import de.pawlidi.restgithub.rest.converter.GsonConverter;
@@ -19,8 +18,7 @@ public abstract class TestUtils {
 	public static final String CLIENT_SECRET = "";
 	public static final String TOKEN = "";
 
-	public static final String LOGIN = String.format("Basic %s", DatatypeConverter
-			.printBase64Binary(String.format("%s:%s", USERNAME, PASSWORD).getBytes(Charset.forName("UTF-8"))));
+	public static final String LOGIN = String.format("Basic %s", Base64.getEncoder().encode(String.format("%s:%s", USERNAME, PASSWORD).getBytes(Charset.forName("UTF-8"))));
 
 	public static final String LOGIN_TOKEN = String.format("token %s", TOKEN);
 
